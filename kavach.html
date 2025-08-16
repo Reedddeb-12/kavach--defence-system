@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Kavach - Interactive Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic, single-page narrative designed for exploration. It starts with a high-level introduction (Hero Section), dives into the core functionality with an interactive diagram (How It Works), allows users to explore the building blocks (System Deconstructed), presents the project's future (Roadmap), and concludes with a summary. This structure was chosen to guide the user from a broad understanding to specific details in a logical, engaging flow, prioritizing comprehension over mirroring the static report's layout. -->
+    <!-- Visualization & Content Choices: The report is descriptive, so visualizations focus on explaining processes and structures. The core workflow is an interactive flowchart (HTML/CSS), making the process tangible. The hardware is a hover-based diagram (HTML/CSS/JS) for component discovery. The software stack is presented in clean columns for clarity. This approach uses structured HTML and JS interactions to make the qualitative information from the report interactive and easily digestible. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F5;
+            color: #2C3E50;
+        }
+        .nav-link {
+            transition: color 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #3498DB;
+        }
+        .hero-bg {
+            background-color: #2C3E50;
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 2.25rem;
+            line-height: 2.5rem;
+            color: #2C3E50;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            color: #7F8C8D;
+            text-align: center;
+            max-width: 48rem;
+            margin: 0 auto 3rem auto;
+        }
+        .workflow-step {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .workflow-step:hover, .workflow-step.active {
+            transform: translateY(-5px);
+            background-color: #3498DB;
+            color: white;
+        }
+        .workflow-step.active .step-number {
+            background-color: white;
+            color: #3498DB;
+        }
+        .workflow-step:hover .step-number, .workflow-step:hover .step-title, .workflow-step:hover .step-icon {
+            color: white;
+        }
+        .workflow-step .step-number {
+            transition: all 0.3s ease;
+        }
+        .hardware-hotspot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(52, 152, 219, 0.8);
+            border-radius: 50%;
+            border: 2px solid white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .hardware-hotspot::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background-color: #3498DB;
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            animation: pulse 2s infinite;
+        }
+        .hardware-hotspot:hover {
+            transform: scale(1.2);
+        }
+        .hotspot-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .hardware-hotspot:hover .hotspot-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.7; }
+            70% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="scroll-smooth">
+
+    <!-- Header & Navigation -->
+    <nav id="navbar" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-[#2C3E50]">🛡️ Project Kavach</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#workflow" class="nav-link px-3 py-2 rounded-md text-sm font-medium">How It Works</a>
+                        <a href="#system" class="nav-link px-3 py-2 rounded-md text-sm font-medium">System Deconstructed</a>
+                        <a href="#roadmap" class="nav-link px-3 py-2 rounded-md text-sm font-medium">Roadmap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg text-white">
+        <div class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">Project Kavach</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-gray-300">An Ultra-Low-Cost, Solar-Powered IoT Alert System for a secure, connected, and autonomous India.</p>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white/10 p-6 rounded-lg">
+                    <h3 class="font-semibold text-lg">💡 The Problem</h3>
+                    <p class="mt-2 text-gray-300">Securing remote assets in India is challenging due to high costs, and lack of reliable power and internet.</p>
+                </div>
+                <div class="bg-white/10 p-6 rounded-lg">
+                    <h3 class="font-semibold text-lg">🎯 The Solution</h3>
+                    <p class="mt-2 text-gray-300">A decentralized, "fire-and-forget" alert system that is affordable, self-sufficient, and works anywhere with a mobile signal.</p>
+                </div>
+                <div class="bg-white/10 p-6 rounded-lg">
+                    <h3 class="font-semibold text-lg">🔑 Key Feature</h3>
+                    <p class="mt-2 text-gray-300">End-to-end AES encryption ensures all captured data is completely secure from interception during transmission.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+
+        <!-- Interactive Workflow Section -->
+        <section id="workflow" class="mb-24">
+            <h2 class="section-title">How It Works: The Kavach Workflow</h2>
+            <p class="section-subtitle">Kavach operates on an efficient, event-driven cycle designed for maximum power conservation and security. Click on each step below to understand the journey of an alert from detection in the field to notification on your device.</p>
+            
+            <div id="workflow-container" class="flex flex-col md:flex-row justify-center items-center gap-2 mb-8 flex-wrap">
+                <!-- Workflow steps will be generated by JS -->
+            </div>
+            <div id="workflow-details" class="bg-white p-8 rounded-lg shadow-lg min-h-[150px] transition-all duration-500">
+                <!-- Details will be loaded here by JS -->
+            </div>
+        </section>
+
+        <!-- System Deconstructed Section -->
+        <section id="system" class="mb-24">
+            <h2 class="section-title">System Deconstructed</h2>
+            <p class="section-subtitle">The Kavach system is a carefully integrated combination of cost-effective hardware and robust software. Explore the components that make up a Sentry Node and the technology stack that powers the entire ecosystem.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Hardware Explorer -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-6">Hardware Explorer</h3>
+                    <div class="relative max-w-md mx-auto aspect-square bg-gray-200 rounded-lg flex items-center justify-center p-4">
+                        <div class="text-center text-gray-600">
+                            <div class="text-5xl mb-2">📦</div>
+                            <span class="font-bold text-lg">Kavach Sentry Node</span>
+                            <p class="text-sm">Hover over the hotspots to explore components.</p>
+                        </div>
+                        <!-- Hotspots -->
+                        <div class="hardware-hotspot" style="top: 10%; left: 10%;">
+                            <div class="hotspot-tooltip absolute bottom-full mb-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 text-center">
+                                <strong class="font-bold">Solar Panel</strong><br>5V, 3-5W Panel for autonomous power generation.
+                            </div>
+                        </div>
+                        <div class="hardware-hotspot" style="top: 25%; right: 15%;">
+                             <div class="hotspot-tooltip absolute bottom-full mb-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 text-center">
+                                <strong class="font-bold">ESP32-CAM</strong><br>The brain and eye, providing processing and imaging.
+                            </div>
+                        </div>
+                        <div class="hardware-hotspot" style="bottom: 15%; right: 20%;">
+                            <div class="hotspot-tooltip absolute top-full mt-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 text-center">
+                                <strong class="font-bold">SIM800L GPRS Module</strong><br>Enables 2G communication for data transmission.
+                            </div>
+                        </div>
+                        <div class="hardware-hotspot" style="bottom: 20%; left: 15%;">
+                            <div class="hotspot-tooltip absolute top-full mt-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 text-center">
+                                <strong class="font-bold">18650 Li-ion Battery</strong><br>Stores solar energy to power the node 24/7.
+                            </div>
+                        </div>
+                         <div class="hardware-hotspot" style="top: 50%; left: 5%;">
+                            <div class="hotspot-tooltip absolute bottom-full mb-2 w-48 bg-gray-800 text-white text-xs rounded py-1 px-2 text-center">
+                                <strong class="font-bold">PIR Motion Sensor</strong><br>Detects movement to wake the device from sleep.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Software Stack -->
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-center mb-6">Technology Stack</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div>
+                            <h4 class="font-bold text-lg mb-3">Firmware</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li><span class="font-semibold">Language:</span> C++</li>
+                                <li><span class="font-semibold">IDE:</span> Arduino IDE</li>
+                                <li><span class="font-semibold">Core:</span> ESP32 Package</li>
+                                <li><span class="font-semibold">Libs:</span> TinyGsmClient, Crypto</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-3">Backend</h4>
+                             <ul class="space-y-2 text-gray-600">
+                                <li><span class="font-semibold">Language:</span> Python 3</li>
+                                <li><span class="font-semibold">Framework:</span> Flask</li>
+                                <li><span class="font-semibold">Libs:</span> PyCryptodome</li>
+                                <li><span class="font-semibold">Deployment:</span> Cloud / Local</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-3">Frontend</h4>
+                             <ul class="space-y-2 text-gray-600">
+                                <li><span class="font-semibold">Tech:</span> HTML5, CSS3</li>
+                                <li><span class="font-semibold">Language:</span> Vanilla JS</li>
+                                <li><span class="font-semibold">Styling:</span> Tailwind CSS</li>
+                                <li><span class="font-semibold">Alerts:</span> Telegram API</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Future Roadmap Section -->
+        <section id="roadmap" class="mb-16">
+            <h2 class="section-title">Future Roadmap & Scalability</h2>
+            <p class="section-subtitle">Project Kavach is built on a flexible foundation, allowing for significant future enhancements. Here's a look at the potential roadmap to make the system even smarter, more efficient, and scalable.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg mb-2">🧠 Improved AI</h4>
+                    <p class="text-gray-600">Upgrading to a Raspberry Pi Zero would enable on-device AI to differentiate between humans and animals, drastically reducing false alarms.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg mb-2">↔️ Two-Way Communication</h4>
+                    <p class="text-gray-600">Allowing the server to send commands back to the node, such as requesting a picture on-demand or adjusting sensor sensitivity remotely.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg mb-2">📡 LoRaWAN Integration</h4>
+                    <p class="text-gray-600">For dense deployments, nodes could communicate via LoRa to a single gateway with a SIM card, massively reducing recurring data costs.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h4 class="font-bold text-lg mb-2">☁️ Commercial Scalability</h4>
+                    <p class="text-gray-600">The backend is designed to scale to thousands of nodes using robust databases and cloud infrastructure with load balancing.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Project Kavach Development Team. Pune, Maharashtra.</p>
+            <p class="text-sm text-gray-400 mt-2">A proof-of-concept for a secure and autonomous India.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const workflowData = [
+                { icon: '😴', title: 'Sleep', description: 'The Kavach Sentry Node remains in a deep-sleep state, consuming mere microamps of power to conserve energy.' },
+                { icon: '🏃', title: 'Wake', description: 'A PIR sensor detects motion and sends a signal that instantly wakes the ESP32-CAM from its low-power state.' },
+                { icon: '📸', title: 'Capture', description: 'The device immediately captures a low-resolution (640x480) JPEG image and saves it to its internal microSD card.' },
+                { icon: '🔒', title: 'Encrypt', description: 'The firmware reads the image and uses a unique, pre-provisioned 128-bit AES key to encrypt the data, making it unreadable if intercepted.' },
+                { icon: '📡', title: 'Transmit', description: 'The node powers on its SIM800L module, connects to the 2G/GPRS network, and sends the encrypted data to the backend server.' },
+                { icon: '🔑', title: 'Decrypt', description: 'The backend server identifies the node and uses its unique key to decrypt the image data back into a clear JPEG file.' },
+                { icon: '💾', title: 'Store & Alert', description: 'The server saves the decrypted image with a timestamp and immediately uses the Telegram Bot API to send an alert to the user.' },
+                { icon: '🔄', title: 'Return to Sleep', description: 'After receiving confirmation from the server, the node powers down its modem and returns to deep sleep, ready for the next event.' }
+            ];
+
+            const workflowContainer = document.getElementById('workflow-container');
+            const workflowDetails = document.getElementById('workflow-details');
+
+            workflowData.forEach((step, index) => {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'workflow-step bg-white p-4 rounded-lg shadow-md flex items-center gap-4 w-full sm:w-auto';
+                stepEl.innerHTML = `
+                    <div class="step-number bg-gray-200 text-gray-700 font-bold w-10 h-10 rounded-full flex items-center justify-center text-lg">${index + 1}</div>
+                    <div class="flex-grow">
+                        <div class="step-icon text-2xl">${step.icon}</div>
+                        <div class="step-title font-semibold text-gray-800">${step.title}</div>
+                    </div>
+                `;
+                stepEl.addEventListener('click', () => {
+                    updateWorkflowDetails(index);
+                });
+                workflowContainer.appendChild(stepEl);
+            });
+
+            function updateWorkflowDetails(index) {
+                const allSteps = document.querySelectorAll('.workflow-step');
+                allSteps.forEach((el, i) => {
+                    el.classList.toggle('active', i === index);
+                });
+
+                const step = workflowData[index];
+                workflowDetails.innerHTML = `
+                    <h3 class="text-xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">${step.icon}</span> Step ${index + 1}: ${step.title}</h3>
+                    <p class="text-gray-700">${step.description}</p>
+                `;
+            }
+
+            updateWorkflowDetails(0);
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+            const navbar = document.getElementById('navbar');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - navbar.clientHeight - 20) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
